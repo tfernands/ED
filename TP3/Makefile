@@ -47,6 +47,7 @@ folderStructure:
 clean:
 	@ rm -rf $(BUILD_PATH)/*
 	@ rm -f $(BIN_PATH)/*
+	@ clear
 
 run:
 	@ clear && make clean && make all && clear && $(BIN_PATH)$(PROJ_NAME)

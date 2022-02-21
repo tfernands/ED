@@ -8,7 +8,7 @@ class ListNode {
     public:
     T item;
     ListNode<T>* next;
-    ListNode(T item){
+    ListNode(const T& item){
         this->item = item;
         this->next = nullptr;
     }
@@ -22,7 +22,7 @@ class LinkedList: public Collection<T> {
     ListNode<T>* start;
     int sz = 0;
 
-    ListNode<T>* getNode(int index){
+    ListNode<T>* getNode(int index) const {
         if (index >= 0 && index < this->sz) {
             int i = 0;
             ListNode<T>* current = this->start;
@@ -31,29 +31,47 @@ class LinkedList: public Collection<T> {
                 else if (current->next != nullptr) current = current->next;
             }
         }
-        throw "index out of bound";
+        throw std::invalid_argument("index out of bound");
     }
 
     public:
+
     LinkedList(){
         this->start = nullptr;
         this->sz = 0;
     }
 
-    virtual ~LinkedList(){
-        ListNode<T>* current = this->start;
-        while (current != nullptr){
-            ListNode<T>* next = current->next;
-            delete current;
-            current = next;
+    LinkedList(std::initializer_list<T> list): LinkedList(){
+         for (T item: list){
+            this->add(item);
         }
     }
 
-    inline void add(T item) override {
+    LinkedList(const LinkedList<T>& linkedlist){
+        this->start = nullptr;
+        this->sz = 0;
+        for (int i = 0; i < linkedlist.size(); i++){
+            this->add(linkedlist.get(i));
+        }
+    }
+
+    virtual ~LinkedList(){
+        this->clear();
+    }
+
+    LinkedList<T>& operator=(const LinkedList<T>& linkedlist) {
+        this->clear();
+        for (int i = 0; i < linkedlist.size(); i++){
+            this->add(linkedlist.get(i));
+        }
+        return *this;
+    }
+
+    inline void add(const T& item) override {
         this->insert(this->sz, item);
     }
 
-    inline void set(int index, T item) override {
+    inline void set(int index, const T& item) override {
         int i = 0;
         ListNode<T>* temp = this->start;
         while(temp->next != nullptr && i < index){
@@ -62,7 +80,7 @@ class LinkedList: public Collection<T> {
         temp->item = item;
     }
 
-    inline void insert(int index, T item){
+    inline void insert(int index, const T& item) override {
         if (index == 0){
             ListNode<T>* temp = new ListNode<T>(item);
             temp->next = this->start;
@@ -91,7 +109,7 @@ class LinkedList: public Collection<T> {
     inline T pop(int index) override {
          ListNode<T>* poped;
         if (this->start == nullptr){
-            throw ("Poping from an empty list.");
+            throw std::invalid_argument("Poping from an empty list.");
         }
         else if (index == 0){
             poped = this->start;
@@ -103,7 +121,7 @@ class LinkedList: public Collection<T> {
             previous->next = poped->next;
         }
         else{
-            throw ("Index out of bound.");
+            throw std::invalid_argument("Index out of bound.");
         }
         this->sz--;
         T item = poped->item;
@@ -111,16 +129,23 @@ class LinkedList: public Collection<T> {
         return item;
     }
 
-    inline T& get(int index) override {
+    inline T& get(int index) const override {
         if (index<0) index=this->sz+index;
         return this->getNode(index)->item;
     }
 
-    inline int size() override {
+    inline int size() const override {
         return this->sz;
     }
 
-
+    inline void clear() override {
+        ListNode<T>* current = this->start;
+        while (current != nullptr){
+            ListNode<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
 
 };
 

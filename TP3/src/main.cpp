@@ -1,23 +1,25 @@
 #include <iostream>
+#include <string>
 #include "../include/linkedlist.hpp"
 #include "../include/arraylist.hpp"
 #include "../include/hashmap.hpp"
 
 using namespace std;
 
-int main(int argc, char** argv){
+//int argc, char** argv
+int main(){
+
+    HashMap<string, string> map;
     
-    HashMap<int, char*> hash(1);
-    ArrayList<char*> list;
-    list.add("Ola");
-    list.add("Mundo!");
-    list[1] = "Mundooo!";
-    cout << list << endl;
+    map["Nome"] = "Thales";
+    map["Idade"] = "25";
+    map["Cidade"] = "Mantena";
 
-    //hash.del("nome");
+    //cout << map << endl;
 
-    // cout << hash["nome"] << endl;
-    // cout << hash["sobrenome"] << endl;
-    cout << hash << endl;
+    cout << map["Ola"] << endl;
+
+    map.printStructure();
+    
     return 0;
 }
